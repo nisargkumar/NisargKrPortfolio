@@ -1,0 +1,33 @@
+# Where each cube face sends the visitor.
+#
+# A project can have up to two destinations:
+#
+#   <slug>.case = https://...   ->  "View case study"   button
+#   <slug>.live = https://...   ->  "See live website"  button
+#
+# A bare "<slug> = <url>" is treated as the case study. The buttons appear
+# under the cube for whichever project is facing you, and the face itself
+# opens the case study (or the live site if there is no case study).
+#
+# Use "soon" instead of a URL for a project that has shipped but has no public
+# site yet — it renders as a disabled "Live website - coming soon" button:
+#
+#   <slug>.live = soon
+#
+# Fill in what you have and leave the rest commented out — a project with no
+# links stays inert and keeps showing its [LINK] token, rather than going
+# somewhere wrong. Then run:  python3 build.py
+#
+# Links open in a new tab.
+
+oneguardian-design-system.live = https://one-guardian-design-system.vercel.app/
+# oneguardian-design-system has no case study — live site only, one CTA.
+
+gnc-crazy-deals.case = https://www.figma.com/proto/enW4zX31ZK5FvxsqkdUIqC/Untitled?node-id=26-4491&p=f&t=bnCTHad0YkIyAyN8-1&scaling=min-zoom&content-scaling=fixed&page-id=21%3A167
+gnc-crazy-deals.live = https://www.guardian.in/products/gnc-buy-4-for-1499
+
+bellavita-plp.live = https://bellavitaorganic.com/collections/shop-all-products
+bellavita-plp.case = https://www.figma.com/proto/enW4zX31ZK5FvxsqkdUIqC/Untitled?node-id=36-938&t=PAVSVBiyXDOoMD5O-1&scaling=scale-down&content-scaling=fixed&page-id=21%3A167
+
+embarouge-homepage.case = https://www.figma.com/proto/enW4zX31ZK5FvxsqkdUIqC/Untitled?node-id=43-2171&t=HjpPH1efZp8tCk4I-1&scaling=scale-down&content-scaling=fixed&page-id=21%3A167
+embarouge-homepage.live = soon
