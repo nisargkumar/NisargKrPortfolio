@@ -1,0 +1,9 @@
+# Everything the site needs is embedded in index.html as data: URIs, so only
+# that one file has to ship. The rest stays in git as the source of truth but
+# is kept off the public site — no point serving 2 MB of working files, or
+# exposing the original exports.
+build.py
+brands/
+projects/
+screens/
+*.txt

@@ -489,7 +489,7 @@ p{margin:0}
 @media(hover:none){
   .cface-descwrap{grid-template-rows:1fr}
   .cface-desc{opacity:1;padding-top:.55rem}
-  .cube-hint{visibility:hidden}
+  .cube-hint{display:none}   /* visibility:hidden still cost the cube its height */
 }
 .cface-go{
   margin-top:.4rem;display:inline-flex;align-items:center;gap:.5em;
@@ -680,6 +680,60 @@ footer{border-top:1px solid var(--rule);margin-top:var(--sp-lg);padding-top:1.5r
 /* ---------- accessibility ---------- */
 @media(max-width:480px){
   .logo{width:46px}          /* eight tiles settle into two rows of four */
+}
+
+/* ---------- mobile: bigger type, tighter rhythm ---------- */
+/* Almost every size on this page is clamp(min, <vw-based>, max). On a 390px
+   screen the vw term collapses, so everything lands on its lower bound — and
+   those bounds were chosen as comfortable DESKTOP minimums, not phone sizes.
+   The result was ten separate text roles at 11.5px or under. This block sets
+   real mobile sizes instead of inheriting desktop's floor. */
+@media(max-width:640px){
+  :root{
+    --sp-sec:2.5rem;      /* 40px, was 48 — 96px between sections was too airy */
+    --sp-lg:1.5rem;
+    --sp-md:1rem;
+  }
+
+  /* the uppercase micro-labels: all of these measured 10.6-11.5px.
+     Tracking eases off too — letter-spacing costs the most at small sizes. */
+  .hero-tag,.mq-label,.stat-sub,.deck-hint,.copy,.scroll-cue{
+    font-size:.78rem;letter-spacing:.12em}
+  .eyebrow{font-size:.8rem;letter-spacing:.12em}
+  .screen-tag{font-size:.72rem;letter-spacing:.08em}
+  .about .role span{font-size:.8rem;letter-spacing:.08em}   /* the date ranges */
+  .back-in span{font-size:.76rem;letter-spacing:.08em}
+  /* the hint is already hidden on touch; hide it on any narrow window so the
+     cube gets its height back there too */
+  .cube-hint{display:none}
+
+  /* buttons: 11.5px text in a 38px pill is under the 44px touch target */
+  .btn{font-size:.78rem;letter-spacing:.1em;padding:1.05em 1.45em}
+
+  /* body and secondary copy */
+  .hero-sub{font-size:1.26rem;max-width:20ch}
+  h1{font-size:2.55rem}
+  h3{font-size:1.15rem}
+  .meta{font-size:1rem}
+  .stat-lab{font-size:1rem}
+  .screen-name,.back-in b{font-size:.98rem}
+  .cface-desc{font-size:.95rem}
+  .way p{font-size:.95rem}
+  .way b{font-size:1.08rem}
+  .cube-now{font-size:1.15rem}
+
+  /* the cube's corners now overhang during the turn — clip, don't hide:
+     overflow:hidden here would make #projects a scroll container and kill the
+     sticky stage inside it */
+  #projects{overflow-x:clip}
+
+  /* touch targets */
+  .logo{width:54px}
+  .way{padding:1.35rem 1rem}
+}
+
+@media(max-width:400px){
+  .dbtn{width:44px;height:44px}   /* 42px was under the touch-target minimum */
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -1425,7 +1479,13 @@ footer{border-top:1px solid var(--rule);margin-top:var(--sp-lg);padding-top:1.5r
          fw <= spare * D / (ratio * D + spare / 2)
        A fixed multiplier here used to let the cube overflow its own scene. */
     var fwByHeight = (spare * D) / (ratio * D + spare / 2);
-    var fwByWidth = (innerWidth - 12) / 1.425;   /* silhouette is fw*1.414 at 45deg */
+    /* The silhouette is fw*1.414 wide at 45deg. Holding that whole diagonal
+       inside a 390px screen caps the face at 265px, which makes the cube the
+       smallest element in its own section. A face sits squarely front-on for
+       most of its dwell and only sweeps wide during the quick turn, so on a
+       phone the corners are allowed to overhang and the section clips them. */
+    var diag = innerWidth < 640 ? 1.18 : 1.425;
+    var fwByWidth = (innerWidth - 12) / diag;
     var fw = Math.floor(Math.min(fwByHeight, fwByWidth, 880));
     fw = Math.max(190, fw);
     var fh = Math.round(fw * ratio);
@@ -1720,7 +1780,9 @@ footer{border-top:1px solid var(--rule);margin-top:var(--sp-lg);padding-top:1.5r
     stage.style.setProperty('--ph', ph + 'px');
     stage.style.setProperty('--bez', Math.max(5, Math.round(pw * 0.032)) + 'px');
     stage.style.setProperty('--rad', Math.round(pw * 0.135) + 'px');
-    reel.style.height = (100 + N * (vw < 760 ? 34 : 42)) + 'svh';
+    /* nine phones at 34svh made the reel four full screens of scrolling on a
+       phone — the longest section on the page by some way */
+    reel.style.height = (100 + N * (vw < 760 ? 24 : 42)) + 'svh';
   }
 
   function paintReel() {
