@@ -173,6 +173,7 @@ p{margin:0}
   border:1px solid transparent;will-change:transform;
   transition:background .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),box-shadow .3s var(--ease);font-weight:500;line-height:1.2}
 .btn svg{width:1.1em;height:1.1em;flex:none}
+.lbl-s{display:none}
 .btn-primary{background:var(--ink);color:var(--paper);box-shadow:0 6px 18px rgba(0,0,0,.15)}
 .btn-primary:hover{background:#000;box-shadow:0 12px 28px rgba(0,0,0,.22)}
 .btn-ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
@@ -537,6 +538,11 @@ p{margin:0}
    overflows, so a shrinkable row gets crushed to 0 — and sizeCube then reads
    that 0, hands the space to the cube, and the row never recovers. */
 .cube-cta{display:flex;flex-wrap:wrap;justify-content:center;gap:.55rem;flex:none;
+  /* The row reserves the height of the TALLEST project (two buttons, which
+     wrap to two lines on a phone). Without these, default align:stretch
+     blows a lone button up to that full reserved height — 95px instead of
+     43px. Invisible on desktop, where the reserve is a single line. */
+  align-items:center;align-content:center;
   margin-top:clamp(.65rem,2.2vh,1.5rem)}   /* project -> actions */
 .cube-cta .btn{transition:opacity .28s var(--ease),transform .28s var(--ease),
   background .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),box-shadow .3s var(--ease)}
@@ -712,6 +718,8 @@ footer{border-top:1px solid var(--rule);margin-top:var(--sp-lg);padding-top:1.5r
   /* buttons: 11.5px text in a 38px pill is under the 44px touch target */
   .btn{font-size:.78rem;letter-spacing:.1em;padding:1.05em 1.45em}
   .deck-reset{font-size:.78rem;letter-spacing:.1em;padding:.7em 1.2em}
+  .lbl-l{display:none}
+  .lbl-s{display:inline}
 
   /* body and secondary copy */
   .hero-sub{font-size:1.26rem;max-width:20ch}
@@ -1590,19 +1598,28 @@ footer{border-top:1px solid var(--rule);margin-top:var(--sp-lg);padding-top:1.5r
   function isUrl(v) { return typeof v === 'string' && /^https?:\/\//.test(v); }
   function isSoon(v) { return v === 'soon'; }
 
+  /* Two full-length CTAs wrap to a second line on a phone, and the row
+     reserves the tallest project's height — so every one-button project got
+     43px of button in a 95px row. Shorter labels keep the pair on one line,
+     which hands ~52px back to the cube. */
+  function LBL(long, short) {
+    return '<span class="lbl-l">' + long + '</span><span class="lbl-s">' + short + '</span>';
+  }
   function realCta(slug) {
     var L = linksFor(slug), html = '';
     /* deliberately no .mag here: the magnetic handler writes el.style.transform
        and would fight the swap transition below */
     if (isUrl(L.study)) html += '<a class="btn btn-primary" href="' + esc(L.study) +
-      '" target="_blank" rel="noopener noreferrer">View case study \u2192</a>';
+      '" target="_blank" rel="noopener noreferrer">' + LBL('View case study', 'Case study') +
+      ' \u2192</a>';
     /* the case study leads when there are two; on its own, the live site is
        the primary action rather than a lone secondary button */
     if (isUrl(L.live)) html += '<a class="btn btn-' + (isUrl(L.study) ? 'ghost' : 'primary') +
       '" href="' + esc(L.live) +
-      '" target="_blank" rel="noopener noreferrer">See live website \u2197</a>';
-    else if (isSoon(L.live)) html += '<span class="btn btn-ghost is-soon" ' +
-      'aria-disabled="true">Live website \u00b7 coming soon</span>';
+      '" target="_blank" rel="noopener noreferrer">' + LBL('See live website', 'Live site') +
+      ' \u2197</a>';
+    else if (isSoon(L.live)) html += '<span class="btn btn-ghost is-soon" aria-disabled="true">' +
+      LBL('Live website \u00b7 coming soon', 'Live site \u00b7 soon') + '</span>';
     return html;
   }
   /* A project shows exactly the CTAs it has — one link, one button. Not every
