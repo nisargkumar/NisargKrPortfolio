@@ -1,4 +1,6 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
 <title>Nisarg Kumar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -709,6 +711,7 @@ footer{border-top:1px solid var(--rule);margin-top:var(--sp-lg);padding-top:1.5r
 
   /* buttons: 11.5px text in a 38px pill is under the 44px touch target */
   .btn{font-size:.78rem;letter-spacing:.1em;padding:1.05em 1.45em}
+  .deck-reset{font-size:.78rem;letter-spacing:.1em;padding:.7em 1.2em}
 
   /* body and secondary copy */
   .hero-sub{font-size:1.26rem;max-width:20ch}
@@ -1780,9 +1783,9 @@ footer{border-top:1px solid var(--rule);margin-top:var(--sp-lg);padding-top:1.5r
     stage.style.setProperty('--ph', ph + 'px');
     stage.style.setProperty('--bez', Math.max(5, Math.round(pw * 0.032)) + 'px');
     stage.style.setProperty('--rad', Math.round(pw * 0.135) + 'px');
-    /* nine phones at 34svh made the reel four full screens of scrolling on a
-       phone — the longest section on the page by some way */
-    reel.style.height = (100 + N * (vw < 760 ? 24 : 42)) + 'svh';
+    /* Do not shorten this to buy page length: the rotation is driven by scroll
+       distance, so less travel per phone makes the whole reel feel jumpy. */
+    reel.style.height = (100 + N * (vw < 760 ? 34 : 42)) + 'svh';
   }
 
   function paintReel() {
